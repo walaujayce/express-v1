@@ -2,9 +2,13 @@ import express, { request, response } from "express";
 
 const app = express();
 
-app.use(express.json())
+app.use(express.json());
 
 const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, ()=>{
+    console.log(`running on port ${PORT}`);
+});
 
 const mockUsers = [
     { id:1, username: "anson", displayName: "ANSON"},
@@ -41,6 +45,10 @@ app.get('/api/products', (request, response)=>{
     response.send([{id:123, name: "chicken breast", price: 12.99}]);
 });
 
-app.listen(PORT, ()=>{
-    console.log(`running on port ${PORT}`);
+app.post('/api/users',(request,response)=>{
+    console.log(request.body);
+    const {body} = request;
+    const newUsers = {id:mockUsers[mockUsers.length-1].id+1, ...body};
+    mockUsers.push(newUsers);
+    return response.status(201).send(newUsers);
 });
